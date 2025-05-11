@@ -62,28 +62,7 @@ def generate_solution(file_path):
             print("❌ Error extracting text from file:", e)
             
 
-    # --- Step 5: Save text to PDF ---
-    def save_to_pdf(text,folder_path, filename):
-        pdf = FPDF()
-        pdf.add_page()
-        file_sol_path = os.path.join(folder_path, filename)
-        font_path = "C:/Users/spars/OneDrive/Desktop/Python Projects/Jaarvis/DejaVuSans.ttf"
-        if not os.path.exists(font_path):
-            print(f"Font file '{font_path}' not found. Please ensure it is in the same directory as the script.")
-            return
-
-        pdf.add_font("DejaVu", "", font_path, uni=True)
-        pdf.set_font("DejaVu", size=12)
-
-        for line in text.split('\n'):
-            pdf.multi_cell(0, 10, line)
-
-        try:
-            pdf.output(file_sol_path)
-            print(f"✅ PDF saved as {file_sol_path}")
-            return file_sol_path
-        except Exception as e:
-            print(f"❌ Failed to save PDF: {e}")
+    # --- Step 5: Save text to DOCX ---
 
     def save_to_docx(content,folder_path,filename):
         try:
@@ -103,7 +82,6 @@ def generate_solution(file_path):
 
     # --- MAIN WORKFLOW ---
     try:
-        # file_path = input("📂 Enter path to assignment file: ").strip('"').replace("\\", "/")
         text = extract_text(file_path)
         user_prompt = input("Enter a custom prompt for GPT (or leave blank for default): ").strip()
         if user_prompt:
