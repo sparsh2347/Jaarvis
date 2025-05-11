@@ -73,6 +73,7 @@ def generate_solution(file_path):
             print("❌ Error extracting text from file:", e)
             
 
+<<<<<<< HEAD
     # --- Step 5: Save text to PDF ---
     def save_to_pdf(text,folder_path, filename):
         #initialies a new FPDF object and adds a page to it
@@ -101,6 +102,9 @@ def generate_solution(file_path):
             return file_sol_path
         except Exception as e:
             print(f"❌ Failed to save PDF: {e}")
+=======
+    # --- Step 5: Save text to DOCX ---
+>>>>>>> 5ee4fbccac51655fd4db89b01afac9a0fba9086b
 
     def save_to_docx(content,folder_path,filename):
         try:
@@ -124,7 +128,6 @@ def generate_solution(file_path):
 
     # --- MAIN WORKFLOW ---
     try:
-        # file_path = input("📂 Enter path to assignment file: ").strip('"').replace("\\", "/")
         text = extract_text(file_path)
         #Custom prompt by the user for accuarte responses
         user_prompt = input("Enter a custom prompt for GPT (or leave blank for default): ").strip()
