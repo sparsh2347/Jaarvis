@@ -1,3 +1,5 @@
+⚠️ Disclaimer:
+This tool uses AI to assist in drafting assignment solutions. Please use it responsibly, review all content thoroughly, and comply with your institution’s academic integrity policies.
 
 # 📚 Jaarvis - Automated Assignment Submission Assistant
 
