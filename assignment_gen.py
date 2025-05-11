@@ -1,10 +1,17 @@
 def generate_solution(file_path):
+    #time used for adding delays when required
     import time
+    #read and extract text from pdf files
     import PyPDF2
+    #to create and save pdfs
     from fpdf import FPDF
+    #file path opertaions
     import os
+    #read and write word files
     import docx
     from docx import Document
+
+    #selenium imports from web automation
     from selenium import webdriver
     from selenium.webdriver.common.by import By
     from selenium.webdriver.chrome.service import Service
@@ -45,15 +52,19 @@ def generate_solution(file_path):
     # --- Step 4: Read and extract text from file ---
     def extract_text(path):
         try:
+            #checking the file extension
             ext = os.path.splitext(path)[-1].lower()
             if ext == ".pdf":
+                #uses PyPDF2.pdfreader to read data from pdf files
                 with open(path, 'rb') as f:
                     reader = PyPDF2.PdfReader(f)
                     return "\n".join(page.extract_text() or "" for page in reader.pages)
             elif ext == ".docx":
+                #uses docx.Document to read word documents
                 doc = docx.Document(path)
                 return "\n".join(para.text for para in doc.paragraphs)
             elif ext == ".txt":
+                #reads the entire file as plain text
                 with open(path, "r", encoding="utf-8") as f:
                     return f.read()
             else:
@@ -64,21 +75,27 @@ def generate_solution(file_path):
 
     # --- Step 5: Save text to PDF ---
     def save_to_pdf(text,folder_path, filename):
+        #initialies a new FPDF object and adds a page to it
         pdf = FPDF()
         pdf.add_page()
+
+        #sspecifies path where the pdf would be saved
         file_sol_path = os.path.join(folder_path, filename)
+
+        #adds a specific font to set the font of the pdf
         font_path = "C:/Users/spars/OneDrive/Desktop/Python Projects/Jaarvis/DejaVuSans.ttf"
         if not os.path.exists(font_path):
             print(f"Font file '{font_path}' not found. Please ensure it is in the same directory as the script.")
             return
-
         pdf.add_font("DejaVu", "", font_path, uni=True)
         pdf.set_font("DejaVu", size=12)
 
+        #splits the text into lines and writes each line to the pdf
         for line in text.split('\n'):
             pdf.multi_cell(0, 10, line)
 
         try:
+            #save documents in the specified path and returns the path
             pdf.output(file_sol_path)
             print(f"✅ PDF saved as {file_sol_path}")
             return file_sol_path
@@ -87,12 +104,16 @@ def generate_solution(file_path):
 
     def save_to_docx(content,folder_path,filename):
         try:
+            #initializes a Document() object from the docx module
             doc = Document()
+            #adds a heading at the top
             doc.add_heading('Assignment Solution', 0)
 
+            #formatting the content
             # Split the response by paragraphs (2 newlines)
             for para in content.strip().split("\n\n"):
                 doc.add_paragraph(para.strip())
+            #saves the doc to the specified folder and returns teh path
             file_doc_path = os.path.join(folder_path, filename)
             doc.save(file_doc_path)
             print(f"🎉 Solution saved to {filename}")
@@ -105,10 +126,12 @@ def generate_solution(file_path):
     try:
         # file_path = input("📂 Enter path to assignment file: ").strip('"').replace("\\", "/")
         text = extract_text(file_path)
+        #Custom prompt by the user for accuarte responses
         user_prompt = input("Enter a custom prompt for GPT (or leave blank for default): ").strip()
         if user_prompt:
             final_prompt = f"{user_prompt}\n\n{text}"
         else:
+            #default user prompt
             user_prompt= "Generate a detailed and accurate answer for this assignment"
             final_prompt = f"{user_prompt}\n\n{text}"
     except Exception as e:
@@ -131,8 +154,10 @@ def generate_solution(file_path):
             let evt = new InputEvent('input', {{ bubbles: true }});
             el.dispatchEvent(evt);
         """, editable_div)
+        #By dispatching the InputEvent, the content inside the editable_div (where the assignment prompt is pasted) is marked as changed. This triggers any associated event listeners on the page, ensuring the change is recognized by the web page, and the content is updated accordingly.
 
         time.sleep(1)
+        #presses enter after pasting the prompt into GPT input field
         driver.execute_script("""
         const event = new KeyboardEvent("keydown", {
             bubbles: true,
@@ -162,14 +187,18 @@ def generate_solution(file_path):
 
         while stable_count < 5:  # wait until response is stable for ~5 seconds
             time.sleep(1)
+            #current repsonse
             responses = driver.find_elements(By.CLASS_NAME, "markdown")
+            #last repsonse
             last = responses[-1].text.strip()
+            #if last response and current response is same them stable count is increase by 1 else stable count becomes 0
             if last == prev:
                 stable_count += 1
             else:
                 stable_count = 0
                 prev = last
 
+        #final response after stability is confirmed
         final_response = responses[-1].text.strip()
         print("\n✅ GPT Response:\n", final_response)
 
@@ -183,6 +212,7 @@ def generate_solution(file_path):
     try:
         folder_path="C:/Users/spars/OneDrive/Desktop/Assignements Sem 4"
         file_name=input("Enter the file name you want to save the solution as: ")
+        #appends a default .docx extension to the file name
         if not file_name.endswith(".docx"):
             file_name += ".docx"
         solution_path=save_to_docx(final_response,folder_path, file_name)

@@ -1,17 +1,21 @@
 def download_assignment(assignment_link):
+    #selenium imports from web automation
     from selenium import webdriver
     from selenium.webdriver.common.by import By
     from selenium.webdriver.chrome.service import Service
     from selenium.webdriver.chrome.options import Options
     from selenium.webdriver.support.ui import WebDriverWait
     from selenium.webdriver.support import expected_conditions as EC
+
+    #used for adding delays, interacting with operating system, regex matching and file search
     import time, os
     import re
     import glob
 
     # STEP 1: Set download folder
+    #use the path where the downloaded file will be saved eg Downloads
     download_dir = "C:/Users/spars/OneDrive/Desktop/Google Downloads"
-    #forcefully closed any alreasdy runinig chrome.exe or chromedriver.exe processes to avoid conflicts such as anothe ropen session
+    #forcefully closed any already runinig chrome.exe or chromedriver.exe processes to avoid conflicts such as anothe ropen session
     os.system("taskkill /f /im chrome.exe")
     os.system("taskkill /f /im chromedriver.exe")
 
@@ -48,6 +52,7 @@ def download_assignment(assignment_link):
         pdf_link = wait.until(EC.presence_of_element_located((
             By.XPATH, "//a[contains(@href, 'drive.google.com') and (contains(@title, '.pdf') or contains(@aria-label, '.pdf'))]"
         )))
+        #retreives teh url of teh pdf file 
         pdf_url = pdf_link.get_attribute("href")
         print("📄 Found PDF URL:", pdf_url)
 
@@ -56,20 +61,23 @@ def download_assignment(assignment_link):
         driver.quit()
         exit()
 
+    #extracting the file id from the url
+    #captures everything that follows /d/ and stpos at next /
     match = re.search(r"/d/([^/]+)", pdf_url)
     if not match:
         raise ValueError("Could not extract file ID from URL")
+    #first captured group
     file_id = match.group(1)
 
     # Direct download URL:
     download_url = f"https://drive.google.com/uc?export=download&id={file_id}"
     print("Direct download URL:", download_url)
-    # Open the direct download link in a new tab
+    # Open the direct download link in a new tab which will automatically download the assignment qs poth
     driver.execute_script(f"window.open('{download_url}', '_blank');")
     print("✅ Download link opened in new tab. File should download automatically.")
     time.sleep(10)
 
-    # Find the most recently downloaded PDF in the download folder
+    # Find the most recently downloaded PDF in the specified download folder
     list_of_files = glob.glob(os.path.join(download_dir, '*.pdf'))
     if not list_of_files:
         print("❌ No PDF found in download directory.")
@@ -88,5 +96,6 @@ def download_assignment(assignment_link):
     except Exception as e:
         print(f"❌ Failed to rename file: {e}")
 
+    #returns the path to the downloaded file
     return new_filename
     
