@@ -1,9 +1,13 @@
-⚠️ Disclaimer:
+# ⚠️ Disclaimer:
 This tool uses AI to assist in drafting assignment solutions. Please use it responsibly, review all content thoroughly, and comply with your institution’s academic integrity policies.
+
+---
 
 # 📚 Jaarvis - Automated Assignment Submission Assistant
 
 **Jaarvis** is a Python-based automation tool designed to streamline the entire assignment handling process on Google Classroom. It helps you download assignments, generate draft solutions using GPT, edit them in DOCX format, and finally convert and submit the solution PDF — all automatically.
+
+**Note:** This tool is designed to assist in the process, but **always review AI-generated solutions** before submission to ensure accuracy and originality.
 
 ---
 
@@ -62,27 +66,42 @@ pip install -r requirements.txt
 - `fpdf`
 - `docx2pdf`
 
-### 3. **Chrome Driver Setup**
-- Ensure Google Chrome is installed.
-- Download the compatible [ChromeDriver](https://chromedriver.chromium.org/) and place it in your PATH or project folder.
-  (preferable version 136.7103.0.93)
--  Update the chrome driver path in each of the selenium scripts
+### 3. **ChromeDriver Setup**
+- Ensure that Google Chrome is installed on your system.
+- Download the appropriate version of [ChromeDriver](https://chromedriver.chromium.org/downloads) that is compatible with your installed version of Google Chrome.
+  (Recommended version: 136.7103.0.93)
+- Place the `chromedriver` executable either in your system's PATH or within your project directory.
+- Update the `chrome_driver` path in each of the Selenium scripts accordingly:
   ```python
-    service = Service("C:/Users/spars/OneDrive/Desktop/Google Downloads/chromedriver-win64/chromedriver-win64/chromedriver.exe")
-  ```
+  service = Service("C:/Users/spars/OneDrive/Desktop/Google Downloads/chromedriver-win64/chromedriver-win64/chromedriver.exe")
 
 ### 4. **Configure Google Classroom Profile**
-- Use an existing Chrome user profile with Google login already authenticated.
-- Update the profile path in the Selenium script like:
-  ```python
-  options.add_argument("user-data-dir=path/to/your/chrome/profile")
-  ```
-- NOTE: Chrome Profile path can be found by searching
-  ```HTML
-   chrome://version/
-  ```
-  on the desired profile
----
+
+To automate Google Classroom interactions using Selenium, use an existing Chrome user profile where you're already logged in to Google. This will ensure that the script can access your Google Classroom and ChatGPT without requiring additional authentication steps.
+
+#### Steps:
+1. **Use an existing Chrome user profile** with Google login already authenticated. This allows the automation script to interact with Google Classroom without requiring you to log in every time.
+
+2. **Update the profile path** in the Selenium script:
+   In the script, find the line where the `options.add_argument` method is used, and provide the path to your Chrome user profile. It should look something like this:
+   ```python
+   options.add_argument("user-data-dir=path/to/your/chrome/profile")
+   options.add_argument("profile-directory=profile_name") 
+   ```
+3. **Find the Chrome Profile Path**
+
+   To locate the path of your Chrome user profile, follow these steps:
+   1. Open Chrome and type the following URL in the address bar:
+      ```html
+      chrome://version/
+      ```
+   2.On the resulting page, look for the "Profile Path" entry. This will show the location of       your Chrome profile on your system.
+
+   Example profile path:
+      ```profile_path
+      C:\Users\YourUser\AppData\Local\Google\Chrome\User Data
+      ```
+
 
 ## 🧪 Example Usage
 
