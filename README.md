@@ -15,7 +15,20 @@ This tool uses AI to assist in drafting assignment solutions. Please use it resp
 
 - **New**: Now creates an additional PDF which contains the explanation to the response provided by GPT for better understanding and clarity.
 - **New**: `classroom.py` now opens the Chrome browser in a half-screen window instead of maximized to avoid UI element click issues.
-- Note: Ensure that the window opened by classsroom .py stays in a half-screen window to avoid any errors.
+- Font Requirement: To ensure proper rendering of Unicode characters in the generated PDFs, the script uses the DejaVuSans.ttf font.
+  
+   📁 Place the `DejaVuSans.ttf` file in the same directory as assignment_gen.py.<br>
+   🔗 You can download the font from the official repository:<br>
+   https://github.com/dejavu-fonts/dejavu-fonts/blob/master/ttf/DejaVuSans.ttf
+- Replace the font path with your font path manually in `assignment_gen.py`
+- Example:
+  ```python 
+   font_path = "C:/Users/spars/OneDrive/Desktop/Python Projects/Jaarvis/DejaVuSans.ttf"
+  ```
+        
+
+
+- Note: Ensure that the window opened by `classsroom.py` stays in a half-screen window to avoid any errors.
 
 
 ## 🚀 Features
