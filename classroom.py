@@ -36,7 +36,8 @@ def upload_solution(assignment_link,file_path):
 
     #starts the chrome browser with the desired profile
     driver = webdriver.Chrome(service=service, options=chrome_options)
-    driver.maximize_window()
+    driver.set_window_size(960, 1080)  # Half of a 1920x1080 screen
+    driver.set_window_position(0, 0)  # Optional: place it on the left side
 
     # time.sleep(1)  
 
