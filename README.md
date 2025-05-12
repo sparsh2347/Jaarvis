@@ -11,6 +11,13 @@ This tool uses AI to assist in drafting assignment solutions. Please use it resp
 
 ---
 
+## 🆕 Recent Updates
+
+- **New**: Now creates an additional PDF which contains the explanation to the response provided by GPT for better understanding and clarity.
+- **New**: `classroom.py` now opens the Chrome browser in a half-screen window instead of maximized to avoid UI element click issues.
+- Note: Ensure that the window opened by classsroom .py stays in a half-screen window to avoid any errors.
+
+
 ## 🚀 Features
 
 - 📥 **Auto-downloads Assignment PDFs** from Google Classroom
@@ -19,7 +26,6 @@ This tool uses AI to assist in drafting assignment solutions. Please use it resp
 - 📄 **Auto PDF Conversion** after user edits
 - 📤 **One-click Assignment Submission** to Classroom
 - 🧠 **Ethical Use Reminder**: GPT usage is disclosed with a disclaimer in the PDF
-
 ---
 
 ## 🔁 Workflow
