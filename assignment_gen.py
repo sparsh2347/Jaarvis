@@ -73,7 +73,6 @@ def generate_solution(file_path):
             print("❌ Error extracting text from file:", e)
             
 
-<<<<<<< HEAD
     # --- Step 5: Save text to PDF ---
     def save_to_pdf(text,folder_path, filename):
         #initialies a new FPDF object and adds a page to it
@@ -102,9 +101,6 @@ def generate_solution(file_path):
             return file_sol_path
         except Exception as e:
             print(f"❌ Failed to save PDF: {e}")
-=======
-    # --- Step 5: Save text to DOCX ---
->>>>>>> 5ee4fbccac51655fd4db89b01afac9a0fba9086b
 
     def save_to_docx(content,folder_path,filename):
         try:
@@ -143,75 +139,78 @@ def generate_solution(file_path):
         exit()
 
     # --- Step 6: Paste into ChatGPT and submit ---
-    try:
-        wait=WebDriverWait(driver,20)
-        # Wait for the ProseMirror input div
-        editable_div = wait.until(EC.presence_of_element_located((By.XPATH, '//div[@id="prompt-textarea" and @contenteditable="true"]')))
-        # Prepare the prompt text
-        prompt_text = final_prompt.replace("\n", "\\n").replace('"', '\\"')
+    def send_prompt_and_get_response(prompt):
+        try:
+            wait=WebDriverWait(driver,20)
+            # Wait for the ProseMirror input div
+            editable_div = wait.until(EC.presence_of_element_located((By.XPATH, '//div[@id="prompt-textarea" and @contenteditable="true"]')))
+            # Prepare the prompt text
+            prompt_text = prompt.replace("\n", "\\n").replace('"', '\\"')
 
-        # Insert the text directly into the ProseMirror editor using JavaScript
-        driver.execute_script(f"""
-            let el = arguments[0];
-            el.innerHTML = '<p>{prompt_text}</p>';
-            let evt = new InputEvent('input', {{ bubbles: true }});
-            el.dispatchEvent(evt);
-        """, editable_div)
-        #By dispatching the InputEvent, the content inside the editable_div (where the assignment prompt is pasted) is marked as changed. This triggers any associated event listeners on the page, ensuring the change is recognized by the web page, and the content is updated accordingly.
+            # Insert the text directly into the ProseMirror editor using JavaScript
+            driver.execute_script(f"""
+                let el = arguments[0];
+                el.innerHTML = '<p>{prompt_text}</p>';
+                let evt = new InputEvent('input', {{ bubbles: true }});
+                el.dispatchEvent(evt);
+            """, editable_div)
+            #By dispatching the InputEvent, the content inside the editable_div (where the assignment prompt is pasted) is marked as changed. This triggers any associated event listeners on the page, ensuring the change is recognized by the web page, and the content is updated accordingly.
 
-        time.sleep(1)
-        #presses enter after pasting the prompt into GPT input field
-        driver.execute_script("""
-        const event = new KeyboardEvent("keydown", {
-            bubbles: true,
-            cancelable: true,
-            key: "Enter",
-            code: "Enter",
-            which: 13,
-            keyCode: 13
-        });
-        document.querySelector('[contenteditable="true"]').dispatchEvent(event);
-        """)
+            time.sleep(1)
+            #presses enter after pasting the prompt into GPT input field
+            driver.execute_script("""
+            const event = new KeyboardEvent("keydown", {
+                bubbles: true,
+                cancelable: true,
+                key: "Enter",
+                code: "Enter",
+                which: 13,
+                keyCode: 13
+            });
+            document.querySelector('[contenteditable="true"]').dispatchEvent(event);
+            """)
 
-    except Exception as e:
-        print("❌ Error pasting and submitting to ChatGPT:", e)
-        driver.quit()
-        exit()
+        except Exception as e:
+            print("❌ Error pasting and submitting to ChatGPT:", e)
+            driver.quit()
+            exit()
 
-    # --- Step 7: Wait for and fetch GPT response ---
-    try:
-        print("⌛ Waiting for GPT to finish response...")
-        # Wait until at least one markdown element is present
-        wait.until(EC.presence_of_element_located((By.CLASS_NAME, "markdown")))
+        # --- Step 7: Wait for and fetch GPT response ---
+        try:
+            print("⌛ Waiting for GPT to finish response...")
+            # Wait until at least one markdown element is present
+            wait.until(EC.presence_of_element_located((By.CLASS_NAME, "markdown")))
 
         # Then wait until the last markdown stops changing
-        prev = ""
-        stable_count = 0
+            prev = ""
+            stable_count = 0
 
-        while stable_count < 5:  # wait until response is stable for ~5 seconds
-            time.sleep(1)
-            #current repsonse
-            responses = driver.find_elements(By.CLASS_NAME, "markdown")
-            #last repsonse
-            last = responses[-1].text.strip()
-            #if last response and current response is same them stable count is increase by 1 else stable count becomes 0
-            if last == prev:
-                stable_count += 1
-            else:
-                stable_count = 0
-                prev = last
+            while stable_count < 5:  # wait until response is stable for ~5 seconds
+                time.sleep(1)
+                #current repsonse
+                responses = driver.find_elements(By.CLASS_NAME, "markdown")
+                #last repsonse
+                last = responses[-1].text.strip()
+                #if last response and current response is same them stable count is increase by 1 else stable count becomes 0
+                if last == prev:
+                    stable_count += 1
+                else:
+                    stable_count = 0
+                    prev = last
 
-        #final response after stability is confirmed
-        final_response = responses[-1].text.strip()
-        print("\n✅ GPT Response:\n", final_response)
+            #final response after stability is confirmed
+            final_response = responses[-1].text.strip()
+            print("\n✅ GPT Response:\n", final_response)
+            return final_response
 
-    except Exception as e:
-        print("❌ Failed to get GPT response:", e)
-        print("⚠️ Page source for debugging:")
-        driver.quit()
-        exit()
+        except Exception as e:
+            print("❌ Failed to get GPT response:", e)
+            print("⚠️ Page source for debugging:")
+            driver.quit()
+            exit()
 
     # --- Step 8: Save response to PDF ---
+    final_response=send_prompt_and_get_response(final_prompt)
     try:
         folder_path="C:/Users/spars/OneDrive/Desktop/Assignements Sem 4"
         file_name=input("Enter the file name you want to save the solution as: ")
@@ -222,8 +221,21 @@ def generate_solution(file_path):
         print("🎉 Solution saved to solution.pdf")
     except Exception as e:
         print("❌ Could not save GPT response to PDF:", e)
-        
-    # Optional: Close the browser
-    driver.quit()
-    
+
+     # Ask GPT to explain the response   
+    try:
+        #explanation - prompt for gpt
+        explanation_prompt = (
+        "Can you explain the above solution step-by-step in a detailed and understandable manner?"
+        )
+        folder_path="C:/Users/spars/OneDrive/Desktop/Assignements Sem 4"
+        exp_response=send_prompt_and_get_response(explanation_prompt)
+        #save explanation to pdf
+        explanation_path=save_to_pdf(exp_response,folder_path,"explanation.pdf")
+        print("Explanation saved to explanation.pdf")
+        os.startfile(explanation_path)
+        input("Press ENTER after you have read the explanation")
+    except Exception as e:
+        print("❌ Could not save GPT explanation response to PDF:", e)
+
     return solution_path
