@@ -54,6 +54,10 @@ This tool uses AI to assist in drafting assignment solutions. Please use it resp
 > python gui.py
 > ```
 
+### 📸 GUI Preview
+
+![image](https://github.com/user-attachments/assets/86ec1b45-2ff3-4fb2-a33c-e301bbafc99c)
+
 📌 **Note**: The GUI internally triggers the full pipeline (`auto_submit.py`) — make sure all scripts are functional.
 
 ---
