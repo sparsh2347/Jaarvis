@@ -13,6 +13,7 @@ This tool uses AI to assist in drafting assignment solutions. Please use it resp
 
 ## 🆕 Recent Updates
 
+- **New**: A user-friendly GUI has been added to the project using **Tkinter**.
 - **New**: Now creates an additional PDF which contains the explanation to the response provided by GPT for better understanding and clarity.
 - **New**: `classroom.py` now opens the Chrome browser in a half-screen window instead of maximized to avoid UI element click issues.
 - Font Requirement: To ensure proper rendering of Unicode characters in the generated PDFs, the script uses the DejaVuSans.ttf font.
@@ -25,9 +26,6 @@ This tool uses AI to assist in drafting assignment solutions. Please use it resp
   ```python 
    font_path = "C:/Users/spars/OneDrive/Desktop/Python Projects/Jaarvis/DejaVuSans.ttf"
   ```
-        
-
-
 - Note: Ensure that the window opened by `classsroom.py` stays in a half-screen window to avoid any errors.
 
 
@@ -39,6 +37,25 @@ This tool uses AI to assist in drafting assignment solutions. Please use it resp
 - 📄 **Auto PDF Conversion** after user edits
 - 📤 **One-click Assignment Submission** to Classroom
 - 🧠 **Ethical Use Reminder**: GPT usage is disclosed with a disclaimer in the PDF
+
+ ## 🖥️ GUI Interface (New)
+
+- It allows the user to:
+  - ✅ Enter the **Google Classroom assignment link**
+  - ✅ Provide an optional **prompt** for the assignment response
+  - ✅ Enter the **Solution File Name**
+- Two interactive message prompts are used to **pause the flow** (like `Press ENTER`) so users can:
+  - 👀 Read the explanation PDF
+  - 📄 Review the draft solution before submission
+
+ 📂 **To launch the GUI**, run:
+
+> ```bash
+> python gui.py
+> ```
+
+📌 **Note**: The GUI internally triggers the full pipeline (`auto_submit.py`) — make sure all scripts are functional.
+
 ---
 
 ## 🔁 Workflow
