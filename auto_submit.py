@@ -1,4 +1,6 @@
 # master_automation.py
+from tkinter import messagebox
+#a gui interface to show system messages
 #used to convert final word to pdf
 from docx2pdf import convert
 #importing the cutsom modules required to automate the task
@@ -8,8 +10,13 @@ from classroom import upload_solution
 #used to open the solution file for editing
 import subprocess
 def main():
+    # master_script.py
+    with open("user_input.txt", "r", encoding="utf-8") as f:
+        assignment_link = f.readline().strip()
+        custom_prompt = f.readline().strip()
+        sol_file_name=f.readline().strip()
+
     # Step 1: Ask user for Google Classroom assignment link
-    assignment_link = input("Paste your Google Classroom assignment link: ").strip()
     print("\n🚀 STEP 1: Downloading assignment...")
     # Download the assignment file from the link
     downloaded_pdf = download_assignment(assignment_link) 
@@ -20,10 +27,11 @@ def main():
 
     #STEP 2: Generate solution for the downloaded assignment using ChatGPT
     print("\n🧠 STEP 2: Generating solution using ChatGPT...")
-    solution_doc = generate_solution(downloaded_pdf)  # Should return path like "solution_output.pdf"
+    solution_doc = generate_solution(downloaded_pdf,custom_prompt,sol_file_name)  # Should return path like "solution_output.pdf"
     # Automatically open the generated Word document for user to review/edit
     subprocess.Popen(['start', '', solution_doc], shell=True)
-    input("📝 Press Enter after reviewing and saving your changes in Word...")
+    #When the word doc is reviewed press OK
+    messagebox.showinfo("Word Doc Opened", "Press OK after reviewing and saving your changes in Word...")
 
     # Convert the final DOCX file into PDF format
     solution_pdf = solution_doc.replace(".docx", ".pdf")

@@ -1,4 +1,7 @@
-def generate_solution(file_path):
+def generate_solution(file_path,user_prompt,file_name):
+    
+    from tkinter import messagebox
+    #a gui interface to show system messages
     #time used for adding delays when required
     import time
     #read and extract text from pdf files
@@ -83,6 +86,7 @@ def generate_solution(file_path):
         file_sol_path = os.path.join(folder_path, filename)
 
         #adds a specific font to set the font of the pdf
+        #here use the donwloaded font path
         font_path = "C:/Users/spars/OneDrive/Desktop/Python Projects/Jaarvis/DejaVuSans.ttf"
         if not os.path.exists(font_path):
             print(f"Font file '{font_path}' not found. Please ensure it is in the same directory as the script.")
@@ -126,7 +130,6 @@ def generate_solution(file_path):
     try:
         text = extract_text(file_path)
         #Custom prompt by the user for accuarte responses
-        user_prompt = input("Enter a custom prompt for GPT (or leave blank for default): ").strip()
         if user_prompt:
             final_prompt = f"{user_prompt}\n\n{text}"
         else:
@@ -185,7 +188,7 @@ def generate_solution(file_path):
             prev = ""
             stable_count = 0
 
-            while stable_count < 5:  # wait until response is stable for ~5 seconds
+            while stable_count < 20:  # wait until response is stable for ~5 seconds
                 time.sleep(1)
                 #current repsonse
                 responses = driver.find_elements(By.CLASS_NAME, "markdown")
@@ -213,7 +216,6 @@ def generate_solution(file_path):
     final_response=send_prompt_and_get_response(final_prompt)
     try:
         folder_path="C:/Users/spars/OneDrive/Desktop/Assignements Sem 4"
-        file_name=input("Enter the file name you want to save the solution as: ")
         #appends a default .docx extension to the file name
         if not file_name.endswith(".docx"):
             file_name += ".docx"
@@ -234,7 +236,7 @@ def generate_solution(file_path):
         explanation_path=save_to_pdf(exp_response,folder_path,"explanation.pdf")
         print("Explanation saved to explanation.pdf")
         os.startfile(explanation_path)
-        input("Press ENTER after you have read the explanation")
+        messagebox.showinfo("Explanation", "Press OK after reading the explanation.")
     except Exception as e:
         print("❌ Could not save GPT explanation response to PDF:", e)
 

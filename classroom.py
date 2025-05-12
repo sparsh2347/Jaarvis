@@ -1,6 +1,5 @@
 def upload_solution(assignment_link,file_path):
     ## STEP 1 -> Importing dependencies
-
     #selenium is  use dto interact with the web browser
     from selenium import webdriver
     #By is used to locate elements(buttons/divs/inputs)
@@ -47,9 +46,6 @@ def upload_solution(assignment_link,file_path):
     ## STEP 3: Opens Google Classroom and the respective assignemnt page
     # assignment_link = input("Paste your Google Classroom assignment link: ").strip()
     driver.get(assignment_link)
-
-    #When the page is opened press ENTER
-    input("Press ENTER after the page is opened...")
 
     ## STEP 4: Clicking 'Add or create' Button
     #waits for the add or create button to be clickable and then clicks it and handle errors if any
