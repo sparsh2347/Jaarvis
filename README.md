@@ -175,6 +175,7 @@ jaarvis/
 ├── assignment_gen.py         # Generates draft solution with GPT
 ├── auto_submit.py            # Links all components for end-to-end automation
 ├── classroom.py              # Handles submission to Google Classroom
+├── gui.py                    # GUI interface for non technical users
 ├── DejaVuSans.ttf/.pkl/.ttc  # Fonts and model files used for formatting
 ├── README.md                 # This file
 ```
